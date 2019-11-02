@@ -4,32 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".FromWhere">
 
     <Button
-        android:id="@+id/logInButton"
+        android:id="@+id/fromCollegeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="157dp"
-        android:layout_marginTop="197dp"
-        android:layout_marginEnd="166dp"
-        android:layout_marginBottom="486dp"
-        android:text="Log In"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="154dp"
+        android:layout_marginTop="172dp"
+        android:layout_marginEnd="132dp"
+        android:onClick="click"
+        android:text="From College"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/signUpButton"
+        android:id="@+id/fromCityButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="154dp"
-        android:layout_marginTop="89dp"
-        android:layout_marginEnd="169dp"
-        android:onClick="signIn"
-        android:text="SignUp"
+        android:layout_marginStart="162dp"
+        android:layout_marginTop="153dp"
+        android:layout_marginEnd="153dp"
+        android:onClick="click"
+        android:text="From City"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logInButton" />
+        app:layout_constraintTop_toBottomOf="@+id/fromCollegeButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>
