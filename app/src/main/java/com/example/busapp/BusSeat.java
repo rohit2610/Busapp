@@ -27,6 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BusSeat extends AppCompatActivity {
 
@@ -209,16 +211,20 @@ public class BusSeat extends AppCompatActivity {
         Log.i("Booked Seats 1",Arrays.toString(bookedSeats.toArray()));
         String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
-        User user = new User(selectedSeatNumber);
+        User user = new User(selectedSeatNumber,time,date);
+
+        ;
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
-        databaseReference.child(username).child(date).child(time).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+        DatabaseReference reference = databaseReference.child(username).push();
+        reference.setValue(user);
+        /*databaseReference.child(username).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isCanceled()){
                     Log.i("Error2",task.getException().toString());
                 }
             }
-        });
+        });*/
 
 
 

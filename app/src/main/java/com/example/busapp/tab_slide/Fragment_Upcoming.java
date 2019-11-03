@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import com.example.busapp.R;
 import com.example.busapp.User;
+import com.example.busapp.User2;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -68,13 +69,12 @@ public class Fragment_Upcoming extends Fragment {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(int i = 0 ; i < dataSnapshot.getChildrenCount() ; i++) {
-                    Log.i("DAta Snapshot", dataSnapshot.getValue().toString());
-                    User user = dataSnapshot.getValue(User.class);
-                    Log.i("User",user.toString());
-                    date = user.getDate();
-                    Log.i("Date",date);
-                }
+               for(DataSnapshot postDataSnapshot : dataSnapshot.getChildren()){
+                   User user = postDataSnapshot.getValue(User.class);
+                   Log.i("USer",user.toString());
+                   Log.i("Time",user.getTime());
+
+               }
 
 
             }
