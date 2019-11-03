@@ -34,30 +34,22 @@ public class CustomAdaptar extends BaseAdapter {
     int i = 1 ;
     ArrayList<Integer> bookedSeats ;
     private ArrayList<Integer> displaySeats ;
+    int[] k ;
 
 
 
-
-    public CustomAdaptar(Context context,ArrayList bookedSeat){
+    public CustomAdaptar(Context context,ArrayList<Integer> seats){
         this.context = context ;
         displaySeats = new ArrayList<>();
         bookedSeats = new ArrayList<>();
-        this.bookedSeats = bookedSeat ;
 
-
-
-
-        if(bookedSeat.size() > 0) {
-            for (int i = 0; i < bookedSeats.size(); i++)
-                displaySeats.add(bookedSeats.get(i));
-        }
-
-
-
-
-
-
+        k = new int[seats.size()];
+        Log.i("Seats",String.valueOf(seats));
+        this.bookedSeats = seats ;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+
+
 
     }
 
@@ -86,22 +78,29 @@ public class CustomAdaptar extends BaseAdapter {
 
 
 
+
+        Log.i("2",String.valueOf(bookedSeats));
+
         ImageView imageView = convertView.findViewById(R.id.layoutImageView);
 
-        Log.i("Contains", String.valueOf(displaySeats.contains(position)));
+
         boolean flag = false ;
 
-        /*for(int i = 0 ; i < displaySeats.size() ; i++){
-            if(position == displaySeats.get(i)){
-                flag = true ;
-                Log.i("Flag",String.valueOf(flag));
-                break;
-            }
-        }*/
+        Object seat = position + 1;
+
+
+
+        flag = bookedSeats.contains(seat);
+
+          Log.i("type", String.valueOf(bookedSeats.contains(seat)));
+
+           Log.i("Flag",String.valueOf(flag));
+
 
 
         if(flag ){
             imageView.setImageResource(R.drawable.booked_seat);
+
         }
 
         else

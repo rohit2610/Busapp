@@ -1,6 +1,7 @@
 package com.example.busapp.tab_slide;
 
 
+import android.net.IpSecManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.busapp.R;
+import com.example.busapp.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,6 +37,10 @@ public class Fragment_Upcoming extends Fragment {
     private ArrayList<Integer> displaySeats ;
     private ListView listView ;
     private ArrayAdapter arrayAdapter ;
+    private String username ;
+    private String  time ;
+    private String date;
+
 
 
     public Fragment_Upcoming() {
@@ -47,16 +53,39 @@ public class Fragment_Upcoming extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_fragment__upcoming, container, false);
-        listView = rootView.findViewById(R.id.upcomingListView);
+        /*listView = rootView.findViewById(R.id.upcomingListView);
         arrayAdapter = new ArrayAdapter(getActivity() ,android.R.layout.simple_list_item_1,displaySeats);
 
         bookedSeats = new ArrayList<>();
         displaySeats = new ArrayList<>();
         displaySeats.add(10);
-        listView.setAdapter(arrayAdapter);
-        databaseReference = FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+        listView.setAdapter(arrayAdapter);*/
 
-        new Handler().postDelayed(new Runnable() {
+        bookedSeats = new ArrayList<>();
+
+        username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(username);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(int i = 0 ; i < dataSnapshot.getChildrenCount() ; i++) {
+                    Log.i("DAta Snapshot", dataSnapshot.getValue().toString());
+                    User user = dataSnapshot.getValue(User.class);
+                    Log.i("User",user.toString());
+                    date = user.getDate();
+                    Log.i("Date",date);
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        /*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 databaseReference.addValueEventListener(new ValueEventListener() {
@@ -76,10 +105,10 @@ public class Fragment_Upcoming extends Fragment {
                     }
                 });
             }
-        },5000);
+        },5000);*/
 
 
-        Log.i("Display List", Arrays.toString(bookedSeats.toArray()));
+//        Log.i("Display List", Arrays.toString(bookedSeats.toArray()));
 
         return rootView;
     }

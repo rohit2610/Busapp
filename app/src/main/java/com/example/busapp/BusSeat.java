@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -28,8 +31,8 @@ import java.util.Arrays;
 public class BusSeat extends AppCompatActivity {
 
     public GridView gridView;
-    ArrayList<Integer> selectedSeatNumber;
-    ArrayList<Integer> bookedSeats;
+    private ArrayList<Integer> selectedSeatNumber;
+    private ArrayList<Integer> bookedSeats;
     Button bookTicket;
     CustomAdaptar customAdaptar;
     private String date ;
@@ -43,6 +46,7 @@ public class BusSeat extends AppCompatActivity {
         setContentView(R.layout.activity_bus_seat);
         bookedSeats = new ArrayList<>();
         gridView = findViewById(R.id.gridView);
+        selectedSeatNumber = new ArrayList<>();
 
 
         Intent i = getIntent();
@@ -53,13 +57,59 @@ public class BusSeat extends AppCompatActivity {
         date  = i.getStringExtra("Date");
         time = i.getStringExtra("Time");
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child(date).child(time);
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                FirebaseUserClass user = dataSnapshot.child("Booked Seats").child(date).child(time).getValue(FirebaseUserClass.class);
+                //Log.i("User",String.valueOf(user.getBookedSeats().get(0).getClass().getName()));
+                if(user != null)
+                bookedSeats = user.getBookedSeats();
+
+                else
+                    bookedSeats.clear();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        databaseReference.addValueEventListener(postListener);
+
+        /*databaseReference = FirebaseDatabase.getInstance().getReference().child("Booked Seats");
+        databaseReference.child(date).child(time).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                bookedSeats = (ArrayList<Integer>) dataSnapshot.child("bookedSeats").getValue();
+                FirebaseUserClass userClass = dataSnapshot.getValue(FirebaseUserClass.class);
+
+
+
+                if(bookedSeats == null)
+                    bookedSeats = new ArrayList<>();
+                Log.i("DAta Snapshot 2", String.valueOf(userClass.getBookedSeats()));
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        /*databaseReference = FirebaseDatabase.getInstance().getReference().child(date).child(time);
 
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot != null) {
-                    bookedSeats = (ArrayList<Integer>) dataSnapshot.getValue();
+                     bookedSeats = (ArrayList<Integer>) dataSnapshot.getValue();
                 }
             }
 
@@ -71,25 +121,38 @@ public class BusSeat extends AppCompatActivity {
 
 
         Log.i("Booked Seats 1", Arrays.toString(bookedSeats.toArray()));
+        bookedSeats.add(100);*/
 
         Handler handler = new Handler();
+        final Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                Log.i("DAta Snapshot", String.valueOf(bookedSeats));
+                customAdaptar = new CustomAdaptar(getApplicationContext(),bookedSeats);
+                gridView.setAdapter(customAdaptar);
+            }
+        };
+        handler.postDelayed(r,5000);
+        /*
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
 
-                customAdaptar = new CustomAdaptar(getApplicationContext(), bookedSeats);
+                Log.i("DAta Snapshot", String.valueOf(bookedSeats));
+                customAdaptar = new CustomAdaptar(getApplicationContext(),bookedSeats);
                 gridView.setAdapter(customAdaptar);
 
             }
-        }, 3000);
+        }, 5000);*/
 
 
-        selectedSeatNumber = new ArrayList<>();
+
 
 
         bookTicket = findViewById(R.id.bookTicketButton);
 
         bookTicket.setVisibility(View.INVISIBLE);
+
 
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -98,17 +161,21 @@ public class BusSeat extends AppCompatActivity {
 
 
                 ImageView imageView = view.findViewById(R.id.layoutImageView);
-                if (bookedSeats.contains(position + 1)) {
-                    Object deletedSeat = (Integer) position +1 ;
-                    bookedSeats.remove(deletedSeat);
-                    imageView.setImageResource(R.drawable.normal_seat);
-                } else {
-                    bookedSeats.add(position + 1);
-                    imageView.setImageResource(R.drawable.processing_seat);
+                Object selectedSeat = position+1 ;
+
+                if( ! bookedSeats.contains(position+1)) {
+
+                    if (selectedSeatNumber.contains(selectedSeat)) {
+                        selectedSeatNumber.remove(selectedSeat);
+                        imageView.setImageResource(R.drawable.normal_seat);
+                    } else {
+                        selectedSeatNumber.add((Integer) selectedSeat);
+                        imageView.setImageResource(R.drawable.processing_seat);
+                    }
+
+
+                    bookTicket.setVisibility(View.VISIBLE);
                 }
-
-
-                bookTicket.setVisibility(View.VISIBLE);
 
 
             }
@@ -123,14 +190,61 @@ public class BusSeat extends AppCompatActivity {
 
         Log.i("Date", date);
         Log.i("Time", time);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Booked Seats");
+        for(int i = 0 ; i < selectedSeatNumber.size() ; i++){
+            bookedSeats.add(selectedSeatNumber.get(i));
+        }
+
+        FirebaseUserClass userClass = new FirebaseUserClass(bookedSeats);
+        databaseReference.child(date).child(time).setValue(userClass)
+        .addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isCanceled()){
+                    Log.i("Error",task.getException().toString());
+                }
+            }
+        });
         Log.i("Booked Seats 1",Arrays.toString(bookedSeats.toArray()));
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
-        databaseReference.child(date).child(time).setValue(bookedSeats);
+        User user = new User(selectedSeatNumber);
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+        databaseReference.child(username).child(date).child(time).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isCanceled()){
+                    Log.i("Error2",task.getException().toString());
+                }
+            }
+        });
 
 
 
 
+    }
+
+    public static class FirebaseUserClass {
+
+        public String time ;
+        public String date ;
+        public   ArrayList<Integer> bookedSeats = new ArrayList<>() ;
+
+        public FirebaseUserClass(){
+
+        }
+
+        public FirebaseUserClass(ArrayList<Integer> bookedSeat){
+
+            this.bookedSeats = bookedSeat ;
+
+
+        }
+
+        public ArrayList<Integer> getBookedSeats() {
+            return bookedSeats;
+        }
     }
 
 
