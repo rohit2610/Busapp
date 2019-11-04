@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CancelTicket"></activity>
+        <activity android:name=".CustomListView"></activity>
+        <activity android:name=".CancelTicket" />
         <activity android:name=".ViewTickets" />
         <activity android:name=".BusSeat" />
         <activity android:name=".FromWhere" />

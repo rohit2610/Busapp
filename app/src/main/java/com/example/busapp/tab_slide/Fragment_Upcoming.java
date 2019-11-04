@@ -1,7 +1,6 @@
 package com.example.busapp.tab_slide;
 
 
-import android.net.IpSecManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,9 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.busapp.CustomAdaptar;
+import com.example.busapp.CustomListView;
 import com.example.busapp.R;
 import com.example.busapp.User;
-import com.example.busapp.User2;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,7 +26,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,12 +34,13 @@ public class Fragment_Upcoming extends Fragment {
 
     private DatabaseReference databaseReference ;
     private ArrayList<Integer> bookedSeats ;
-    private ArrayList<Integer> displaySeats ;
+    private ArrayList<User> displaySeats ;
     private ListView listView ;
     private ArrayAdapter arrayAdapter ;
     private String username ;
     private String  time ;
     private String date;
+    private ArrayList<User> displayBooking ;
 
 
 
@@ -62,7 +62,14 @@ public class Fragment_Upcoming extends Fragment {
         displaySeats.add(10);
         listView.setAdapter(arrayAdapter);*/
 
+        listView = rootView.findViewById(R.id.upcomingListView);
+
+
         bookedSeats = new ArrayList<>();
+        displaySeats = new ArrayList<User>();
+
+
+
 
         username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(username);
@@ -73,6 +80,10 @@ public class Fragment_Upcoming extends Fragment {
                    User user = postDataSnapshot.getValue(User.class);
                    Log.i("USer",user.toString());
                    Log.i("Time",user.getTime());
+                   displaySeats.add(user);
+                   Log.i("DisplaySeats",displaySeats.get(0).toString());
+
+
 
                }
 
@@ -84,6 +95,16 @@ public class Fragment_Upcoming extends Fragment {
 
             }
         });
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                final CustomListView customListView = new CustomListView(getContext(),displaySeats);
+                listView.setAdapter(customListView);
+            }
+        };
+
+       new Handler().postDelayed(r,5000);
 
         /*new Handler().postDelayed(new Runnable() {
             @Override
