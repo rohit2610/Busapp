@@ -18,7 +18,7 @@ public class PageViewAdapter extends FragmentPagerAdapter {
 
         switch (position){
             case 0:
-                fragment = new Fragment_Upcoming();
+                fragment = new Fragment_Upcoming( );
                 break;
 
             case 1:

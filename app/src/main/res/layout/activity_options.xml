@@ -35,27 +35,14 @@
         app:layout_constraintTop_toBottomOf="@+id/timeTableButton" />
 
     <Button
-        android:id="@+id/viewTicketsButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="viewTicket"
-        android:text="View Tickets"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.579" />
-
-    <Button
         android:id="@+id/cancelTicketButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="62dp"
+        android:layout_marginTop="56dp"
         android:onClick="cancelTicket"
         android:text="Cancel Ticket"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.455"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewTicketsButton" />
+        app:layout_constraintTop_toBottomOf="@+id/ticketBookButton" />
 </androidx.constraintlayout.widget.ConstraintLayout>

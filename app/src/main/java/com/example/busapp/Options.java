@@ -36,12 +36,7 @@ public class Options extends MenuClass {
         startActivity(i);
     }
 
-    public void viewTicket(View view){
 
-        Intent i = new Intent(this,ViewTickets.class);
-        startActivity(i);
-
-    }
 
     public void cancelTicket(View view){
 

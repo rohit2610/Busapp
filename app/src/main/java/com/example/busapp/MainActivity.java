@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onFailure(@NonNull Exception e) {
 
                         Log.i("SignIn","Failure");
+
                     }
                 });
     }

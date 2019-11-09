@@ -1,6 +1,7 @@
 package com.example.busapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -18,6 +19,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -64,11 +66,13 @@ public class BusSeat extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 FirebaseUserClass user = dataSnapshot.child("Booked Seats").child(date).child(time).getValue(FirebaseUserClass.class);
                 //Log.i("User",String.valueOf(user.getBookedSeats().get(0).getClass().getName()));
-                if(user != null)
-                bookedSeats = user.getBookedSeats();
+
+                 if(user != null)
+                    bookedSeats = user.getBookedSeats();
 
                 else
                     bookedSeats.clear();
+
             }
 
             @Override
@@ -79,6 +83,12 @@ public class BusSeat extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         databaseReference.addValueEventListener(postListener);
+
+
+
+
+
+
 
         /*databaseReference = FirebaseDatabase.getInstance().getReference().child("Booked Seats");
         databaseReference.child(date).child(time).addValueEventListener(new ValueEventListener() {
@@ -124,6 +134,7 @@ public class BusSeat extends AppCompatActivity {
 
         Log.i("Booked Seats 1", Arrays.toString(bookedSeats.toArray()));
         bookedSeats.add(100);*/
+
 
         Handler handler = new Handler();
         final Runnable r = new Runnable() {
@@ -231,27 +242,7 @@ public class BusSeat extends AppCompatActivity {
 
     }
 
-    public static class FirebaseUserClass {
 
-        public String time ;
-        public String date ;
-        public   ArrayList<Integer> bookedSeats = new ArrayList<>() ;
-
-        public FirebaseUserClass(){
-
-        }
-
-        public FirebaseUserClass(ArrayList<Integer> bookedSeat){
-
-            this.bookedSeats = bookedSeat ;
-
-
-        }
-
-        public ArrayList<Integer> getBookedSeats() {
-            return bookedSeats;
-        }
-    }
 
 
 }
