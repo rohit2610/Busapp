@@ -238,6 +238,8 @@ public class BusSeat extends AppCompatActivity {
         });*/
 
 
+        Intent i = new Intent(this,CancelTicket.class);
+        startActivity(i);
 
 
     }
