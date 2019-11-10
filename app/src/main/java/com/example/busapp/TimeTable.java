@@ -123,14 +123,17 @@ public class TimeTable extends AppCompatActivity {
         }, myear[0],mMonth,mDay);
         datePickerDialog.show();
 
+
+
         datePickerDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
 
 
 
-                    db.collection("BusTimings").document("FromCity")
-                            .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                final String from = getIntent().getStringExtra("From");
+
+                    db.collection("BusTimings").document(from).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             if (documentSnapshot != null) {
@@ -164,6 +167,7 @@ public class TimeTable extends AppCompatActivity {
 
                         Log.i("position",String.valueOf(position));
                         Intent i = new Intent(TimeTable.this,BusSeat.class);
+                        i.putExtra("From",from);
                         i.putExtra("Date",date[0]);
                         i.putExtra("Time",timings.get(position));
                         startActivity(i);

@@ -8,15 +8,16 @@ public class User {
     public ArrayList<Integer> selectedSeats = new ArrayList<>() ;
     public String date ;
     public String time ;
+    private String from ;
 
     public User(){
 
     }
 
-    public User( ArrayList<Integer> seats,String time , String date){
+    public User( ArrayList<Integer> seats,String time , String date,String from){
 
 
-
+        this.from = from ;
         this.selectedSeats = seats ;
         this.date = date ;
         this.time = time ;
@@ -36,5 +37,9 @@ public class User {
 
     public String getTime() {
         return time;
+    }
+
+    public String getFrom() {
+        return from;
     }
 }

@@ -25,10 +25,14 @@ public class FromWhere extends AppCompatActivity {
 
         if(id == R.id.fromCityButton){
             Intent i = new Intent(this, TimeTable.class);
+            i.putExtra("From","FromCity");
             startActivity(i);
         }
 
         else if(id  == R.id.fromCollegeButton){
+            Intent  i = new Intent(this,TimeTable.class);
+            i.putExtra("From","FromCollege");
+            startActivity(i);
 
         }
     }

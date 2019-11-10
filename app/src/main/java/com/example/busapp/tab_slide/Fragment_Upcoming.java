@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +31,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,6 +52,11 @@ public class Fragment_Upcoming extends Fragment {
     private String time;
     private String date;
     private ArrayList<String> keys;
+    private String from ;
+    private Bundle args ;
+    private String CURRENT_FRAGMENT  = "UPCOMING";
+
+
 
 
 
@@ -56,11 +66,15 @@ public class Fragment_Upcoming extends Fragment {
 
 
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_fragment__upcoming, container, false);
+        args = getArguments();
+
         /*listView = rootView.findViewById(R.id.upcomingListView);
         arrayAdapter = new ArrayAdapter(getActivity() ,android.R.layout.simple_list_item_1,displaySeats);
 
@@ -85,6 +99,7 @@ public class Fragment_Upcoming extends Fragment {
 
 
 
+
         username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(username);
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -93,7 +108,7 @@ public class Fragment_Upcoming extends Fragment {
                 if(keys.size() == 0)
                     keys = new ArrayList<>();
 
-                final CustomListView customListView = new CustomListView(getContext(), displaySeats,keys);
+                final CustomListView customListView = new CustomListView(getContext(), displaySeats,keys,CURRENT_FRAGMENT);
                 listView.setAdapter(customListView);
 
             }
@@ -113,8 +128,28 @@ public class Fragment_Upcoming extends Fragment {
                     Log.i("Key",dataSnapshot.getKey());
                     keys.add(dataSnapshot.getKey());
                     Log.i("Time", user.getTime());
-                    displaySeats.add(user);
-                    Log.i("DisplaySeats", displaySeats.get(0).toString());
+
+                     DateFormat sourceFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm aa");
+                     String dateAsString = user.getDate() +" " + user.getTime();
+                     try {
+                         Date date = sourceFormat.parse(dateAsString);
+                         Log.i("DAte",date.toString());
+
+                         boolean k  = new Date().before(date);
+                         if(k){
+                             displaySeats.add(user);
+
+                         }
+
+
+                     } catch (ParseException e) {
+                         e.printStackTrace();
+                     }
+
+
+
+
+                    //Log.i("DisplaySeats", displaySeats.get(0).toString());
 
 
                 }

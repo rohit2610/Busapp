@@ -37,10 +37,12 @@ public class CustomListView extends ArrayAdapter<User>  {
     ArrayList<String> keys ;
     ArrayList<Integer> seats = new ArrayList<>();
     ArrayList<Integer> bookedSeats2  ;
+    String from ;
+    String current_Fragment ;
 
     String date ;
     String time ;
-    public CustomListView(@NonNull Context context,ArrayList<User> data,ArrayList<String> key) {
+    public CustomListView(@NonNull Context context,ArrayList<User> data,ArrayList<String> key,String current_Fragmnet) {
         super(context,R.layout.activity_custom_list_view,data);
 
         keys = new ArrayList<>();
@@ -48,6 +50,7 @@ public class CustomListView extends ArrayAdapter<User>  {
         this.context = context ;
         this.user = data ;
         this.keys = key ;
+        this.current_Fragment = current_Fragmnet ;
         layoutInflater = LayoutInflater.from(context);
 
     }
@@ -68,16 +71,22 @@ public class CustomListView extends ArrayAdapter<User>  {
         final TextView dateTextView = convertView.findViewById(R.id.customListViewDateTextView);
         TextView timeTextView = convertView.findViewById(R.id.cutomListViewTimrTextView);
         final TextView bookedSeats = convertView.findViewById(R.id.customListViewBookedSeatsTextView);
+        TextView fromWhere = convertView.findViewById(R.id.fromWhereCustomListView);
 
 
 
 
+
+        fromWhere.setText(user2.getFrom());
         dateTextView.setText(user2.getDate());
         timeTextView.setText(user2.getTime());
         bookedSeats.setText(user2.getSelectedSeats().toString());
         bookedSeats2 = new ArrayList<>();
 
         Button cancelButton = convertView.findViewById(R.id.deleteCustomListViewButton);
+
+        if(current_Fragment == "PAST")
+            cancelButton.setVisibility(View.INVISIBLE);
 
 
        cancelButton.setOnClickListener(new View.OnClickListener() {

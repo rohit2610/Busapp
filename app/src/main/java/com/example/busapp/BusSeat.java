@@ -41,6 +41,7 @@ public class BusSeat extends AppCompatActivity {
     CustomAdaptar customAdaptar;
     private String date ;
     private String time ;
+    private String from ;
 
     DatabaseReference databaseReference;
 
@@ -60,11 +61,12 @@ public class BusSeat extends AppCompatActivity {
 
         date  = i.getStringExtra("Date");
         time = i.getStringExtra("Time");
+        from = i.getStringExtra("From");
 
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                FirebaseUserClass user = dataSnapshot.child("Booked Seats").child(date).child(time).getValue(FirebaseUserClass.class);
+                FirebaseUserClass user = dataSnapshot.child("Booked Seats").child(from).child(date).child(time).getValue(FirebaseUserClass.class);
                 //Log.i("User",String.valueOf(user.getBookedSeats().get(0).getClass().getName()));
 
                  if(user != null)
@@ -204,7 +206,7 @@ public class BusSeat extends AppCompatActivity {
         Log.i("Date", date);
         Log.i("Time", time);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Booked Seats");
+        databaseReference = FirebaseDatabase.getInstance().getReference().child("Booked Seats").child(from);
         for(int i = 0 ; i < selectedSeatNumber.size() ; i++){
             bookedSeats.add(selectedSeatNumber.get(i));
         }
@@ -222,7 +224,7 @@ public class BusSeat extends AppCompatActivity {
         Log.i("Booked Seats 1",Arrays.toString(bookedSeats.toArray()));
         String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
 
-        User user = new User(selectedSeatNumber,time,date);
+        User user = new User(selectedSeatNumber,time,date,from);
 
         ;
         databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -239,6 +241,7 @@ public class BusSeat extends AppCompatActivity {
 
 
         Intent i = new Intent(this,CancelTicket.class);
+        i.putExtra("From",from);
         startActivity(i);
 
 
